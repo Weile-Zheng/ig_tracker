@@ -1,4 +1,4 @@
-import re
+import instagrapi as ip
 
 
 def loginWithCredential(cl, username, password):
@@ -10,7 +10,7 @@ def loginWithCredential(cl, username, password):
 
 def getFollowerCount(client):
     """
-    :return the @code int follower count 
+    :return the @code int follower co
     """
     return len(client.user_followers())
 
@@ -26,11 +26,14 @@ def userNotFollowingBack(client):
     """
     :return a list of followers not following back
     """
-    return [x for x in list(client.user_following(client.user_id).values()) if x not in list(client.user_followers(client.user_id).values())]
+    following = set(client.user_following(client.user_id).keys())
+    followers = set(client.user_followers(client.user_id).keys())
+    not_following_back = list(following - followers)
+    return not_following_back
 
 
 def printUserNotFollowingBackList(list):
     print("List of accounts not following back ----------")
     print(f"{'ID':<20} {'Username':<20} {'Full Name':<20}")
     for x in list:
-        print(f"{x.pk:<20} {x.username:<20} {x.full_name:<20}")
+        print(f"{x:<20} {ip.user_info(x).username:<20} {ip.user_info(x).fullname:<20}")
