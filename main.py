@@ -1,6 +1,6 @@
+import instagrapi
 import tkinter as tk
 import util
-import instagrapi
 
 
 # Create the main window
@@ -19,16 +19,8 @@ username_entry.pack()
 # Create the Password label and input box
 password_label = tk.Label(root, text="Password:")
 password_label.pack()
-password_entry = tk.Entry(root)  # Use show="*" to hide password
+password_entry = tk.Entry(root, show="*")  # Use show="*" to hide password
 password_entry.pack()
-
-
-def on_enter(e):
-    submit_button.config(bg='white')
-
-
-def on_leave(e):
-    submit_button.config(bg='SystemButtonFace')
 
 
 def on_submit_click(event):
@@ -38,9 +30,10 @@ def on_submit_click(event):
     print("Password:", password)
 
     login = False
-
+    cl = instagrapi.Client()
     try:
-        util.loginWithCredential(username, password)
+        print("Logging in")
+        cl.login(username, password)
     except instagrapi.exceptions.UnknownError:
         print("The username you entered doesn't appear to belong to an account. Please check your username and try again.")
     except instagrapi.exceptions.BadPassword:
@@ -54,14 +47,14 @@ def on_submit_click(event):
             widget.destroy()
         # Display the "successful" message
         successful_label = tk.Label(root, text="Login Successful!")
+        list = util.userNotFollowingBack(cl)
+        util.printUserNotFollowingBackList(list)
         successful_label.pack()
 
 
 # Create the Submit button
 submit_button = tk.Button(
     root, text="Submit", command=on_submit_click,  bg='SystemButtonFace')
-submit_button.bind("<Enter>", on_enter)
-submit_button.bind("<Leave>", on_leave)
 submit_button.pack()
 # Bind the left mouse button click event
 submit_button.bind("<Button-1>", on_submit_click)
